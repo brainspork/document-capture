@@ -1,9 +1,14 @@
-<ng-container [formGroup]="formGroup">
-  <p>My file</p>
-  <input formControlName="input" multiple type="file" accept=".jpg, .jpeg, .pdf, .gif, .png" caputre="environment" />
+<p>My file</p>
+<input #fileSelector multiple type="file" accept=".jpg, .jpeg, .pdf, .gif, .png" caputre="environment" />
 
-  <p>Preview</p>
-  @for (img of urls; track img) {
-    <img [src]="img" />
-  }
-</ng-container>
+<button (click)="download()">Download</button>
+
+<p>Preview</p>
+<p>Total size: {{size / 1000}}kb</p>
+@for (file of files; track file; let idx = $index) {
+  <div>
+    <button (click)="remove($index)">Remove</button>
+    <img style="width: 100px;height: 100px;display: inline;" [src]="file.url" />
+    <p>{{file.file.name}}</p>
+  </div>
+}
