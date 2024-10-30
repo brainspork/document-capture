@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-app.use(express.static(__dirname + '/document-capture'));
+app.use(express.static(__dirname + '/dist/document-capture/browser'));
 app.get('/*', function(req,res) {
 res.sendFile(path.join(__dirname+
-'/document-capture/index.html'));});
+'dist/document-capture/browser/index.html'));});
 app.listen(process.env.PORT || 8080);
