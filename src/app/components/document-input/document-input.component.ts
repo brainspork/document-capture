@@ -14,4 +14,8 @@ export class DocumentInputComponent {
   formGroup = new FormGroup({
     input: new FormControl()
   });
+
+  public get val() {
+    return this.formGroup.controls.input.value;
+  }
 }
