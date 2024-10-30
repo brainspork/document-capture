@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -10,12 +10,18 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './document-input.component.html',
   styleUrl: './document-input.component.css'
 })
-export class DocumentInputComponent {
+export class DocumentInputComponent implements OnInit {
   formGroup = new FormGroup({
     input: new FormControl()
   });
 
-  public get val() {
-    return this.formGroup.controls.input.value;
+  urls: string[] = [];
+
+  ngOnInit(): void {
+    // this.formGroup.controls.input.valueChanges.subscribe(v => {
+    //   const img = URL.createObjectURL(v);
+    //   this.urls.push(img);
+    // });
   }
+
 }

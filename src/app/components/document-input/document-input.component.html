@@ -1,9 +1,9 @@
 <ng-container [formGroup]="formGroup">
-  <p>Capture</p>
-  <input formControlName="input" type="file" accept="image/*" caputre="environment" />
+  <p>My file</p>
+  <input formControlName="input" multiple type="file" accept=".jpg, .jpeg, .pdf, .gif, .png" caputre="environment" />
 
-  <p>Noncapture</p>
-  <input formControlName="input" type="file" accept="image/*" />
-
-  <p>File: {{val}}</p>
+  <p>Preview</p>
+  @for (img of urls; track img) {
+    <img [src]="img" />
+  }
 </ng-container>
