@@ -1,3 +1,7 @@
+@for(device of devices; track device) {
+  <p>{{device.label}}</p>
+}
+
 <button (click)="startSelectedCamera()">Start</button>
 
   <div class="scanner full">

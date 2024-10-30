@@ -51,7 +51,7 @@ export class DocumentScannerComponent implements OnInit {
 
   play() {
     navigator.mediaDevices.getUserMedia({
-      video: { width: 1280, height: 720, facingMode: { exact: "environment" } },
+      video: { width: 400, height: 500, facingMode: { exact: "environment" } },
       audio: false
     }).then((stream) => {
       this.localStream = stream;
