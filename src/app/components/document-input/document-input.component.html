@@ -1,14 +1,18 @@
-<p>My file</p>
-<input #fileSelector multiple type="file" accept=".jpg, .jpeg, .pdf, .gif, .png" caputre="environment" />
+<p>Select any number of images. On mobile, you can choose to take a picture with your phone. If you want to take pictures of a multi page document, just select choose files again.</p>
+<label style="display: block;">Select/capture image files</label>
+<input #fileSelector multiple type="file" accept=".jpg, .jpeg, .gif, .png" caputre="environment" />
 
-<button (click)="download()">Download</button>
+<button [disabled]="!files.length" style="display: block; margin-top: 1rem;" (click)="download()">Download images as single pdf</button>
 
 <p>Preview</p>
 <p>Total size: {{size / 1000}}kb</p>
 @for (file of files; track file; let idx = $index) {
-  <div>
-    <button (click)="remove($index)">Remove</button>
-    <img style="width: 100px;height: 100px;display: inline;" [src]="file.url" />
-    <p>{{file.file.name}}</p>
+  <hr />
+  <div style="margin-bottom: 1rem;">
+    <div>
+      <p style="display: inline; margin-right: 1rem;">{{file.file.name}}</p>
+      <button (click)="remove($index)">Remove</button>
+    </div>
+    <img class="display: block;" style="width: 100px;height: 100px;display: inline;" [src]="file.url" />
   </div>
 }
