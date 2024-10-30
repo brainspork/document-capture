@@ -1,8 +1,7 @@
 <ng-container [formGroup]="formGroup">
-  <input
-    formControlName="input"
-    type="file"
-    accept="image/*"
-    caputre="environment"
-  />
+  <p>Capture</p>
+  <input formControlName="input" type="file" accept="image/*" caputre="environment" />
+
+  <p>Noncapture</p>
+  <input formControlName="input" type="file" accept="image/*" />
 </ng-container>
