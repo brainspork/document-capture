@@ -1,34 +1,9 @@
-@for(device of devices; track device) {
-  <p>{{device.label}}</p>
-}
+<div class="camera">
+  <video id="video" #videoCapture>Video stream not available.</video>
+  <button id="start-button" (click)="takePicture($event)">Take photo</button>
+</div>
 
-<button (click)="startSelectedCamera()">Start</button>
-
-  <div class="scanner full">
-    <div class="scannerContent">
-      <video #videoStream class="camera full" muted autoplay="autoplay" playsinline="playsinline" webkit-playsinline></video>
-      <canvas class="hiddenCVSForFrame" style="display:none"></canvas>
-      <canvas class="hiddenCVS" style="display:none"></canvas>
-      <svg class="overlay full" version="1.1" xmlns="http://www.w3.org/2000/svg">
-      </svg>
-    </div>
-    <div class="scannerHeader toolbar" style="justify-content: space-between;">
-      <div class="closeButton">
-        <img class="icon" src="assets/cross.svg" alt="close"/>
-      </div>
-      <div class="flashButton">
-        <img class="icon" src="assets/flash.svg" alt="flash"/>
-      </div>
-    </div>
-    <div class="scannerFooter">
-      <div class="switchButton">
-        <img class="icon" src="assets/switch.svg" alt="switch"/>
-      </div>
-      <div class="shutter">
-        <div class="shutterButton"></div>
-      </div>
-      <div class="autoCaptureButton">
-        <img class="icon" src="assets/auto-photo.svg" alt="auto"/>
-      </div>
-    </div>
-  </div>
+<canvas id="canvas" #refCanvas></canvas>
+<div class="output">
+  <img id="photo" alt="The screen capture will appear in this box." #photo />
+</div>

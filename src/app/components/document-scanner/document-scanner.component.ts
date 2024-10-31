@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -8,77 +8,70 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './document-scanner.component.html',
   styleUrl: './document-scanner.component.css'
 })
-export class DocumentScannerComponent implements OnInit {
-  @ViewChild('videoStream', { read: ElementRef }) video!: ElementRef<HTMLVideoElement>;
-  devices: MediaDeviceInfo[] = [];
-  selectedDeviceInd: number = -1;
-  localStream?: MediaStream
-  isScanning = false;
+export class DocumentScannerComponent implements AfterViewInit {
+  @ViewChild('videoCapture', { read: ElementRef }) video!: ElementRef<HTMLVideoElement>;
+  @ViewChild('refCanvas', { read: ElementRef }) canvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('photo', { read: ElementRef }) photo!: ElementRef<HTMLImageElement>;
 
-  async ngOnInit(): Promise<void> {
-    this.devices = await this.getCameraDevices();
-  }
+  width: number = 320;
+  height: number = 0;
+  streaming: boolean = false;
 
-  async getCameraDevices() {
-    const cameraDevices = [];
+  ngAfterViewInit(): void {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then(stream => {
+        this.video.nativeElement.srcObject = stream;
+        this.video.nativeElement.play();
+      })
+      .catch(err => console.error(`An error occured: ${err}`));
 
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    const devices = await navigator.mediaDevices.enumerateDevices();
+    this.video.nativeElement.addEventListener(
+      'canplay',
+      () => {
+        if (!this.streaming) {
+          this.height = (this.video.nativeElement.videoHeight / this.video.nativeElement.videoWidth) * this.width;
 
-    for (let device of devices) {
-      if (device.kind === 'videoinput') {
-        cameraDevices.push(device);
-      }
-    }
-
-    const tracks = stream.getTracks();
-
-    for (let track of tracks) {
-      track.stop();
-    }
-
-    return cameraDevices;
-  }
-
-  startSelectedCamera() {
-    const device = this.devices[this.selectedDeviceInd];
-    if (device) {
-    }
-    this.play()
-
-    this.isScanning = true;
-  }
-
-  play() {
-    navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    }).then((stream) => {
-      this.localStream = stream;
-      this.video.nativeElement.srcObject = stream;
-
-      if ("ImageCapture" in window) {
-        console.log("ImageCapture supported");
-        const track = this.localStream.getVideoTracks()[0];
-        // this.imageCapture = new window.ImageCapture(track);
-      }else{
-        console.log("ImageCapture not supported");
-      }
-    });
-  };
-
-  stop() {
-    try {
-      if (this.localStream) {
-        const tracks = this.localStream.getTracks();
-        for (let i = 0; i < tracks.length; i++) {
-          const track = tracks[i];
-          track.stop();
+          this.video.nativeElement.setAttribute('width', this.width.toString());
+          this.video.nativeElement.setAttribute('width', this.height.toString());
+          this.canvas.nativeElement.setAttribute('width', this.width.toString());
+          this.canvas.nativeElement.setAttribute('width', this.height.toString());
+          this.streaming = true;
         }
-      }
-    } catch (e: any) {
-      alert(e.message);
-    }
+      },
+      false
+    );
 
+    this.clearPhoto();
+  }
+
+  public takePicture(event: Event) {
+    event.preventDefault();
+
+    const context = this.canvas.nativeElement.getContext('2d');
+    if (!context) return;
+
+    if (this.width && this.height) {
+      this.canvas.nativeElement.width = this.width;
+      this.canvas.nativeElement.height = this.height;
+
+      context.drawImage(this.video.nativeElement, 0, 0, this.width, this.height);
+
+      const data = this.canvas.nativeElement.toDataURL('image/png');
+      this.photo.nativeElement.setAttribute('src', data);
+    } else {
+      this.clearPhoto();
+    }
+  }
+
+  public clearPhoto() {
+    const context = this.canvas.nativeElement.getContext('2d');
+    if (!context) return;
+
+    context.fillStyle = '#AAA';
+    context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    const data = this.canvas.nativeElement.toDataURL('image/png');
+    this.photo.nativeElement.setAttribute('src', data);
   }
 }
